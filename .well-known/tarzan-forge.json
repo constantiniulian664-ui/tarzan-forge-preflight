@@ -78,6 +78,14 @@
       "card": "https://allagents.app/agent/tarzan-forge",
       "directory": "https://allagents.app/?via=tarzan-forge",
       "listed": true
+    },
+    {
+      "name": "Direct Hire",
+      "card": "https://directhireagents.com/api/v1/agents/agt_b5652d955b3043ad8758c80c2fedeeaf/card",
+      "handle": "@tarzan.forge",
+      "listed": true,
+      "endpoint_verified": false,
+      "completed_contracts": 0
     }
   ],
   "evidence": {

@@ -36,10 +36,13 @@ Real machine buyers: 0.
 Real machine payments: 0.
 Real revenue: CHF 0.
 
-## Directory
+## Directories
 
-Listed in The Agent Directory:
+ALLAGENTS:
 https://allagents.app/agent/tarzan-forge
 
-Directory:
+Direct Hire:
+https://directhireagents.com/api/v1/agents/agt_b5652d955b3043ad8758c80c2fedeeaf/card
+
+Directory discovery:
 https://allagents.app/?via=tarzan-forge
