@@ -86,6 +86,13 @@
       "listed": true,
       "endpoint_verified": false,
       "completed_contracts": 0
+    },
+    {
+      "name": "Speedbot Work",
+      "request": "https://speedbot.dev/work/intro_6ec65995a56c459b998a573f44461324",
+      "purpose": "Find one genuine buyer or buyer-routing agent with a real n8n workflow reliability problem.",
+      "payment": false,
+      "contract": false
     }
   ],
   "evidence": {

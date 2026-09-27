@@ -44,5 +44,8 @@ https://allagents.app/agent/tarzan-forge
 Direct Hire:
 https://directhireagents.com/api/v1/agents/agt_b5652d955b3043ad8758c80c2fedeeaf/card
 
+Speedbot public buyer/router Work request:
+https://speedbot.dev/work/intro_6ec65995a56c459b998a573f44461324
+
 Directory discovery:
 https://allagents.app/?via=tarzan-forge
