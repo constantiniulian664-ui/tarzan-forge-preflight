@@ -1,0 +1,79 @@
+{
+  "schema_version": "0.1",
+  "protocol": "TARZAN_MACHINE_COMMERCE_DISCOVERY",
+  "seller": {
+    "name": "TARZAN FORGE",
+    "subtitle": "Autonomous Economic Mechanism Engine"
+  },
+  "status": "PUBLIC_MACHINE_DISCOVERY",
+  "updated": "2026-09-27",
+  "buyer_types": ["AI_AGENT", "BUSINESS_SERVICE", "HUMAN"],
+  "services": [
+    {
+      "id": "WORKFLOW_RELIABILITY_SPRINT",
+      "description": "Diagnose, scope, repair, test and verify one unreliable n8n workflow within supported boundaries.",
+      "reference_price": {
+        "amount": 299,
+        "currency": "CHF",
+        "evidence_state": "HYPOTHESIS_NOT_PROVEN_WILLINGNESS_TO_PAY"
+      },
+      "public_preflight": "https://constantiniulian664-ui.github.io/tarzan-forge-preflight/",
+      "input": {
+        "type": "SANITIZED_N8N_WORKFLOW_JSON",
+        "secrets_allowed": false,
+        "unnecessary_personal_data_allowed": false
+      },
+      "capability": {
+        "deterministic_preflight": true,
+        "arbitrary_workflow_auto_repair": false,
+        "automatic_live_execution": false
+      }
+    }
+  ],
+  "purchase_intent": {
+    "transport": "GITHUB_ISSUE",
+    "url": "https://github.com/constantiniulian664-ui/tarzan-forge-preflight/issues/new",
+    "title_prefix": "[BUYER REQUEST]",
+    "required_body_fields": [
+      "Requested service",
+      "Preflight route",
+      "Problem summary",
+      "Traffic source",
+      "Signal id",
+      "Mechanism id"
+    ],
+    "machine_example": {
+      "Requested service": "WORKFLOW_RELIABILITY_SPRINT",
+      "Preflight route": "ASSISTED_REVIEW_REQUIRED",
+      "Problem summary": "Short sanitized description only",
+      "Traffic source": "machine_discovery",
+      "Signal id": "",
+      "Mechanism id": ""
+    },
+    "workflow_file_must_not_be_attached": true
+  },
+  "machine_gateway": {
+    "local_sandbox_tested": true,
+    "stable_public_transaction_endpoint": false,
+    "full_external_sandbox_transaction_proven": false
+  },
+  "payment": {
+    "live_payment_active": false,
+    "real_funds_enabled": false,
+    "sandbox_semantics_tested": [
+      "AP2_STYLE_BUYER_MANDATE",
+      "HTTP_402_STYLE_PAYMENT_REQUIRED"
+    ],
+    "standards_compliance_claimed": false
+  },
+  "authority": {
+    "buyer_mandate_does_not_activate_seller_live_payment": true,
+    "owner_live_payment_authorization_required": true
+  },
+  "evidence": {
+    "real_machine_buyer_requests": 0,
+    "real_machine_payments": 0,
+    "real_revenue_chf": 0
+  },
+  "truth_boundary": "This manifest proves stable public machine-readable discovery only. It does not prove external machine use, a stable public transaction endpoint, live agent payments, or revenue."
+}
