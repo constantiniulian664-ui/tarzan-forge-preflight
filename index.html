@@ -13,8 +13,8 @@
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.muted{color:#666}.good{font-weight:800}
 label{display:block;font-weight:650;margin:14px 0 7px}textarea,input[type=file]{width:100%}
 textarea{padding:12px;border:1px solid #ccc;border-radius:10px;font:inherit}
-button{padding:14px 18px;border:0;border-radius:10px;background:#171717;color:#fff;font-weight:750;cursor:pointer}
-button:disabled{opacity:.45;cursor:not-allowed}.pill{display:inline-block;padding:7px 10px;border:1px solid #ccc;border-radius:999px;margin:3px}
+button,.cta{display:inline-block;padding:14px 18px;border:0;border-radius:10px;background:#171717;color:#fff;font-weight:750;cursor:pointer;text-decoration:none}
+button:disabled,.cta.disabled{opacity:.45;cursor:not-allowed;pointer-events:none}.pill{display:inline-block;padding:7px 10px;border:1px solid #ccc;border-radius:999px;margin:3px}
 pre{white-space:pre-wrap;word-break:break-word;background:#efeee9;padding:14px;border-radius:10px;max-height:430px;overflow:auto}
 .lock{border-left:4px solid #171717;padding-left:14px}@media(max-width:680px){.grid{grid-template-columns:1fr}}
 </style>
@@ -94,6 +94,23 @@ function analyze(workflow){
           next_action:route==='OUT_OF_SCOPE'?'MANUAL_SCOPE_DECISION':'OWNER_SCOPE_REVIEW',
           execution_authorized:false,payment_authorized:false,workflow_persisted:false};
 }
+function buyerRequestUrl(out){
+  const problem=$('problem').value.trim().replace(/\s+/g,' ').slice(0,500)||'No public problem summary provided';
+  const c=out.finding_counts;
+  const body=[
+    'Requested service: WORKFLOW_RELIABILITY_SPRINT',
+    'Preflight route: '+out.route,
+    'Problem summary: '+problem,
+    'Auto-fixable findings: '+c.auto_fixable,
+    'Manual-review findings: '+c.manual_review,
+    'Structural findings: '+c.structural,
+    'Reference price: CHF 299',
+    '',
+    'Workflow file intentionally not attached. This request is for scope review only; no payment is authorized.'
+  ].join('\n');
+  return 'https://github.com/constantiniulian664-ui/tarzan-forge-preflight/issues/new?title='+
+    encodeURIComponent('[BUYER REQUEST] Workflow Reliability Sprint')+'&body='+encodeURIComponent(body);
+}
 $('run').addEventListener('click',async()=>{
   const file=$('workflow').files[0];
   if(!file){$('result').innerHTML='<p>Select a workflow JSON file.</p>';return}
@@ -103,12 +120,21 @@ $('run').addEventListener('click',async()=>{
   try{
     if(file.size>900000) throw new Error('Workflow is too large for this V0.1 preflight.');
     const out=analyze(JSON.parse(await file.text())),c=out.finding_counts;
+    const request=out.offer_eligible
+      ? '<div class="lock"><h3>Want TARZAN to repair it?</h3>'+
+        '<p>This opens a <strong>public GitHub buyer request</strong>. The workflow file is not included.</p>'+
+        '<p><label><input id="public_ack" type="checkbox"> I confirm my problem summary is safe to publish and contains no secrets, credentials, or client personal data.</label></p>'+
+        '<a id="request_repair" class="cta disabled" target="_blank" rel="noopener" href="'+esc(buyerRequestUrl(out))+'">Request repair · CHF 299 reference</a>'+
+        '<p class="muted">GitHub sign-in is required to submit the request. Submitting requests scope review; it does not authorize payment.</p></div>'
+      : '<p class="lock"><strong>Current automated offer withheld.</strong> The workflow has structural findings outside V0.1 supported scope.</p>';
     $('result').innerHTML='<p class="good">'+esc(out.route)+'</p>'+
       '<span class="pill">Auto-fixable: '+c.auto_fixable+'</span>'+
       '<span class="pill">Manual review: '+c.manual_review+'</span>'+
       '<span class="pill">Structural: '+c.structural+'</span>'+
       '<p>Next: '+esc(out.next_action)+'</p>'+
-      '<pre>'+esc(JSON.stringify(out.findings,null,2))+'</pre>';
+      '<pre>'+esc(JSON.stringify(out.findings,null,2))+'</pre>'+request;
+    const ack=$('public_ack'),link=$('request_repair');
+    if(ack&&link) ack.addEventListener('change',()=>link.classList.toggle('disabled',!ack.checked));
   }catch(e){
     $('result').innerHTML='<p>Preflight error: '+esc(e.message||e)+'</p>';
   }finally{
