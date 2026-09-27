@@ -104,6 +104,7 @@ function buyerRequestUrl(out){
   const mechanism=(qp.get('mechanism')||'').replace(/[^a-zA-Z0-9_.-]/g,'').slice(0,120);
   const body=[
     'Requested service: WORKFLOW_RELIABILITY_SPRINT',
+    'Buyer type: HUMAN',
     'Preflight route: '+out.route,
     'Problem summary: '+problem,
     'Traffic source: '+trafficSource,

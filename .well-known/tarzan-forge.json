@@ -36,6 +36,7 @@
     "title_prefix": "[BUYER REQUEST]",
     "required_body_fields": [
       "Requested service",
+      "Buyer type",
       "Preflight route",
       "Problem summary",
       "Traffic source",
@@ -44,6 +45,7 @@
     ],
     "machine_example": {
       "Requested service": "WORKFLOW_RELIABILITY_SPRINT",
+      "Buyer type": "AI_AGENT",
       "Preflight route": "ASSISTED_REVIEW_REQUIRED",
       "Problem summary": "Short sanitized description only",
       "Traffic source": "machine_discovery",
