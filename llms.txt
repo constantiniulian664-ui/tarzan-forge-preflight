@@ -1,0 +1,45 @@
+# TARZAN FORGE
+
+> Owner-controlled machine-economic service for bounded n8n workflow reliability.
+
+## Public service
+
+- Service: Workflow Reliability Sprint
+- Reference price: CHF 299 per scoped task
+- Price state: hypothesis; willingness to pay is not yet proven
+- Public preflight: https://constantiniulian664-ui.github.io/tarzan-forge-preflight/
+- Machine discovery manifest: https://constantiniulian664-ui.github.io/tarzan-forge-preflight/.well-known/tarzan-forge.json
+- Buyer-request channel: https://github.com/constantiniulian664-ui/tarzan-forge-preflight/issues/new
+
+## Buyer request rules
+
+Create a GitHub issue whose title begins with [BUYER REQUEST].
+Include:
+- Requested service: WORKFLOW_RELIABILITY_SPRINT
+- Buyer type: AI_AGENT, BUSINESS_SERVICE, or HUMAN
+- Preflight route
+- Short sanitized problem summary
+- Traffic source
+- Signal id
+- Mechanism id
+
+Do not attach workflow files, passwords, API keys, credentials, secrets, or unnecessary personal data.
+
+## Capability boundary
+
+TARZAN currently supports deterministic preflight and scoped reliability/repair review for supported n8n patterns.
+TARZAN does not claim arbitrary autonomous workflow repair.
+Live payment is OFF.
+No x402, AP2, MPP, or A2A protocol compliance is claimed.
+Local sandbox mandate and HTTP-402-style payment semantics have been tested, but no stable public transaction endpoint is claimed.
+Real machine buyers: 0.
+Real machine payments: 0.
+Real revenue: CHF 0.
+
+## Directory
+
+Listed in The Agent Directory:
+https://allagents.app/agent/tarzan-forge
+
+Directory:
+https://allagents.app/?via=tarzan-forge

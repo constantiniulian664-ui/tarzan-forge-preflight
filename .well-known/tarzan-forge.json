@@ -72,6 +72,14 @@
     "buyer_mandate_does_not_activate_seller_live_payment": true,
     "owner_live_payment_authorization_required": true
   },
+  "directories": [
+    {
+      "name": "ALLAGENTS",
+      "card": "https://allagents.app/agent/tarzan-forge",
+      "directory": "https://allagents.app/?via=tarzan-forge",
+      "listed": true
+    }
+  ],
   "evidence": {
     "real_machine_buyer_requests": 0,
     "real_machine_payments": 0,
