@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="TARZAN FORGE browser-only n8n workflow reliability preflight.">
+<title>TARZAN FORGE — n8n Workflow Preflight</title>
+<style>
+:root{font-family:Inter,system-ui,Segoe UI,sans-serif;color:#171717;background:#f5f4ef}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:900px;margin:auto;padding:52px 22px 80px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase}h1{font-size:clamp(42px,8vw,76px);line-height:.96;letter-spacing:-.045em;margin:20px 0}
+.lead{font-size:20px;line-height:1.55;max-width:740px}.card{background:#fff;border:1px solid #d9d7cf;border-radius:18px;padding:26px;margin-top:24px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.muted{color:#666}.good{font-weight:800}
+label{display:block;font-weight:650;margin:14px 0 7px}textarea,input[type=file]{width:100%}
+textarea{padding:12px;border:1px solid #ccc;border-radius:10px;font:inherit}
+button{padding:14px 18px;border:0;border-radius:10px;background:#171717;color:#fff;font-weight:750;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}.pill{display:inline-block;padding:7px 10px;border:1px solid #ccc;border-radius:999px;margin:3px}
+pre{white-space:pre-wrap;word-break:break-word;background:#efeee9;padding:14px;border-radius:10px;max-height:430px;overflow:auto}
+.lock{border-left:4px solid #171717;padding-left:14px}@media(max-width:680px){.grid{grid-template-columns:1fr}}
+</style>
+</head><body><main class="wrap">
+<div class="eyebrow">TARZAN FORGE · PUBLIC PREFLIGHT V0.1</div>
+<h1>Check one n8n workflow before paying for repair.</h1>
+<p class="lead">Choose a sanitized n8n workflow JSON. The analysis runs in your browser and classifies the workflow as auto-supported, assisted-review required, or outside the current supported scope.</p>
+
+<section class="card">
+<div class="grid">
+<div><h2>Privacy first</h2><p>Your selected workflow is analyzed locally in this browser. This page does not upload or store the file.</p></div>
+<div><h2>Repair reference</h2><p><strong>CHF 299</strong> · one scoped Workflow Reliability Sprint.</p><p class="muted">No live checkout is active on this public preflight.</p></div>
+</div>
+</section>
+
+<section class="card">
+<h2>Run free preflight</h2>
+<label for="problem">Problem summary</label>
+<textarea id="problem" rows="4" placeholder="Example: API requests sometimes fail and records disappear."></textarea>
+<label for="workflow">Sanitized n8n workflow JSON</label>
+<input id="workflow" type="file" accept=".json,application/json">
+<p><label><input id="sanitized" type="checkbox"> I confirm this workflow contains no passwords, API keys, production credentials, or unnecessary personal data.</label></p>
+<button id="run">Analyze workflow</button>
+<div id="result" aria-live="polite"></div>
+</section><section class="card">
+<h2>Commercial boundary</h2>
+<p class="lock"><strong>Payment remains locked.</strong> A real buyer must first accept a supported scope. Live payment activation remains separately Owner-authorized.</p>
+</section>
+
+<section class="card">
+<h2>Truth boundary</h2>
+<p>This is a deterministic preflight for a narrow set of currently supported patterns. It is not a universal workflow audit, security certification, or proof that a workflow is production-safe.</p>
+</section>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function analyze(workflow){
+  if(!workflow||typeof workflow!=='object'||!Array.isArray(workflow.nodes)) throw new Error('Invalid n8n workflow JSON: nodes must be an array.');
+  const names=workflow.nodes.filter(n=>n&&typeof n==='object').map(n=>String(n.name||''));
+  const structural=[];
+  if(new Set(names).size!==names.length) structural.push('DUPLICATE_NODE_NAMES');
+  const known=new Set(names);
+  const connections=workflow.connections&&typeof workflow.connections==='object'?workflow.connections:{};
+  for(const [source,groups] of Object.entries(connections)){
+    if(!known.has(source)) structural.push('UNKNOWN_CONNECTION_SOURCE:'+source);
+    if(!groups||typeof groups!=='object') continue;
+    for(const paths of Object.values(groups)){
+      if(!Array.isArray(paths)) continue;
+      for(const branch of paths||[]) for(const edge of branch||[]){
+        const target=String((edge&&edge.node)||'');
+        if(target&&!known.has(target)) structural.push('UNKNOWN_CONNECTION_TARGET:'+target);
+      }
+    }
+  }  const auto=[],manual=[];
+  workflow.nodes.forEach((node,i)=>{
+    if(!node||typeof node!=='object') return;
+    const type=String(node.type||''),name=String(node.name||('node-'+i));
+    if(type.endsWith('.httpRequest')&&node.retryOnFail!==true){
+      auto.push({code:'HTTP_NO_RETRY',severity:'MEDIUM',node:name,
+                 message:'HTTP Request node has no explicit retry-on-fail policy.'});
+    }
+    if(type.endsWith('.webhook')){
+      const params=node.parameters&&typeof node.parameters==='object'?node.parameters:{};
+      if(params.authentication==null||params.authentication===''||params.authentication==='none'){
+        manual.push({code:'WEBHOOK_NO_AUTH_REVIEW',severity:'MEDIUM',node:name,
+                     message:'Webhook appears unauthenticated; confirm whether public access is intentional.'});
+      }
+    }
+  });
+  const unique=[...new Set(structural)].sort();
+  const route=unique.length?'OUT_OF_SCOPE':manual.length?'ASSISTED_REVIEW_REQUIRED':'AUTO_SUPPORTED';
+  return {status:'PREFLIGHT_COMPLETE',route,
+          finding_counts:{auto_fixable:auto.length,manual_review:manual.length,structural:unique.length},
+          findings:{auto_fixable_findings:auto,manual_findings:manual,structural_findings:unique},
+          offer_eligible:route!=='OUT_OF_SCOPE',
+          next_action:route==='OUT_OF_SCOPE'?'MANUAL_SCOPE_DECISION':'OWNER_SCOPE_REVIEW',
+          execution_authorized:false,payment_authorized:false,workflow_persisted:false};
+}
+$('run').addEventListener('click',async()=>{
+  const file=$('workflow').files[0];
+  if(!file){$('result').innerHTML='<p>Select a workflow JSON file.</p>';return}
+  if(!$('sanitized').checked){$('result').innerHTML='<p>Confirm the workflow is sanitized first.</p>';return}
+  $('run').disabled=true;
+  $('result').innerHTML='<p>Analyzing in your browser…</p>';
+  try{
+    if(file.size>900000) throw new Error('Workflow is too large for this V0.1 preflight.');
+    const out=analyze(JSON.parse(await file.text())),c=out.finding_counts;
+    $('result').innerHTML='<p class="good">'+esc(out.route)+'</p>'+
+      '<span class="pill">Auto-fixable: '+c.auto_fixable+'</span>'+
+      '<span class="pill">Manual review: '+c.manual_review+'</span>'+
+      '<span class="pill">Structural: '+c.structural+'</span>'+
+      '<p>Next: '+esc(out.next_action)+'</p>'+
+      '<pre>'+esc(JSON.stringify(out.findings,null,2))+'</pre>';
+  }catch(e){
+    $('result').innerHTML='<p>Preflight error: '+esc(e.message||e)+'</p>';
+  }finally{
+    $('run').disabled=false;
+  }
+});
+</script>
+</main></body></html>
