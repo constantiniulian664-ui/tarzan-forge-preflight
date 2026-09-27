@@ -97,10 +97,17 @@ function analyze(workflow){
 function buyerRequestUrl(out){
   const problem=$('problem').value.trim().replace(/\s+/g,' ').slice(0,500)||'No public problem summary provided';
   const c=out.finding_counts;
+  const qp=new URLSearchParams(location.search);
+  const trafficSource=(qp.get('src')||'direct').replace(/[^a-zA-Z0-9_.-]/g,'').slice(0,80)||'direct';
+  const signal=(qp.get('signal')||'').replace(/[^a-zA-Z0-9_.-]/g,'').slice(0,120);
+  const mechanism=(qp.get('mechanism')||'').replace(/[^a-zA-Z0-9_.-]/g,'').slice(0,120);
   const body=[
     'Requested service: WORKFLOW_RELIABILITY_SPRINT',
     'Preflight route: '+out.route,
     'Problem summary: '+problem,
+    'Traffic source: '+trafficSource,
+    'Signal id: '+signal,
+    'Mechanism id: '+mechanism,
     'Auto-fixable findings: '+c.auto_fixable,
     'Manual-review findings: '+c.manual_review,
     'Structural findings: '+c.structural,
